@@ -27,7 +27,9 @@ Optimist::die :docker_base, "must be specified" if OPTS[:docker_base].nil?
 Optimist::die :color, "must be a hex color without the '#', e.g. 'fff' or 'ffffff'" unless (OPTS[:color].nil? || OPTS[:color].match?(/\A(\h{6}|\h{3})\z/))
 
 def update_gitignore
-  File.open("#{WORKING_DIR}/.gitignore", "a") { |f| f.write(".devcontainer") }
+  gitignore_file = "#{WORKING_DIR}/.gitignore"
+  return if File.read(gitignore_file).match?(/\.devcontainer(\n|\z)/)
+  File.open(gitignore_file, "a") { |f| f.write(".devcontainer") }
 end
 
 def make_devcontainer_dir
