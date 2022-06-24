@@ -1,0 +1,79 @@
+#!/usr/bin/env ruby
+
+require_relative 'lib/optimist'
+require 'fileutils'
+require 'json'
+require 'byebug'
+require 'erb'
+
+TYPES = %w(
+  typescript1
+)
+
+WORKING_DIR = Dir.pwd
+DEVCONTAINER_CONFIG_DIR = "#{__dir__}/config/devcontainer"
+DOCKER_CONFIG_DIR = "#{__dir__}/config/docker"
+
+OPTS = Optimist::options do 
+  banner "Creates a VS Code devcontainer configuration in the current directory"
+  opt :name, "Devcontainer name", :type => :string
+  opt :type, "Kind of devcontainer environment, one of [#{TYPES.join(', ')}]", :type => :string
+  opt :color, "Editor color to differentiate the app (optional, hex format without the pound sign)", :type => :string, :default => nil
+  opt :docker_base, "Docker base image", :type => :string  
+end
+
+Optimist::die :type, "must be one of [#{TYPES.join(', ')}]" if !TYPES.include?(OPTS[:type])
+Optimist::die :docker_base, "must be specified" if OPTS[:docker_base].nil?
+Optimist::die :color, "must be a hex color without the '#', e.g. 'fff' or 'ffffff'" unless (OPTS[:color].nil? || OPTS[:color].match?(/\A(\h{6}|\h{3})\z/))
+
+def update_gitignore
+  File.open("#{WORKING_DIR}/.gitignore", "a") { |f| f.write(".devcontainer") }
+end
+
+def make_devcontainer_dir
+  FileUtils.mkdir_p("#{WORKING_DIR}/.devcontainer")
+end
+
+def read_devcontainer_config(filename)
+  full_filename = "#{DEVCONTAINER_CONFIG_DIR}/#{filename}"
+  File.exist?(full_filename) ?
+    JSON.parse(File.read(full_filename)) : 
+    {}
+end
+
+def make_devcontainer_json
+  make_devcontainer_dir
+  hash = read_devcontainer_config("base.json")
+
+  hash["name"] = OPTS[:name] unless OPTS[:name].nil?
+
+  if OPTS[:color]
+    hash["settings"]["workbench.colorCustomizations"] = {
+      "titleBar.activeBackground": "##{OPTS[:color]}",
+      "editorGroupHeader.tabsBorder": "##{OPTS[:color]}",
+    }
+  end
+
+  type_specific_hash = read_devcontainer_config("#{OPTS[:type]}.json")
+
+  hash["extensions"] = (hash["extensions"] + type_specific_hash["extra_extensions"]).uniq
+
+  File.open("#{WORKING_DIR}/.devcontainer/devcontainer.json", "w") { |f| f.write(JSON.pretty_generate(hash))}
+end
+
+def make_dockerfile
+  binding_clone = binding.clone
+
+  # read snippets
+  Dir["#{DOCKER_CONFIG_DIR}/snippets/*"].each do |snippet_file|
+    binding_clone.local_variable_set(File.basename(snippet_file), File.read(snippet_file))
+  end
+
+  dockerfile = ERB.new(File.read("#{DOCKER_CONFIG_DIR}/Dockerfile.#{OPTS[:type]}.erb"), trim_mode: '-').result(binding_clone)
+
+  File.open("#{WORKING_DIR}/.devcontainer/Dockerfile", "w") { |f| f.write(dockerfile)}
+end
+
+update_gitignore
+make_devcontainer_json
+make_dockerfile
