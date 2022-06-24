@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+tmp_dir=$(mktemp -d -t devcontainer-XXXXXXXXXX)
+
+git clone https://github.com/jpslav/devcontainers.git $tmp_dir
+
+$tmp_dir/install $@
