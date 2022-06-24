@@ -2,6 +2,10 @@
 
 tmp_dir=$(mktemp -d -t devcontainer-XXXXXXXXXX)
 
-git clone https://github.com/jpslav/devcontainers.git $tmp_dir
+echo "Cloning the devcontainers tool to a temporary directory: $tmp_dir"
 
-$tmp_dir/install $@
+git clone --quiet https://github.com/jpslav/devcontainers.git $tmp_dir
+
+echo "Installing the devcontainer files with $tmp_dir/install '$@'"
+
+$tmp_dir/install "$@"
