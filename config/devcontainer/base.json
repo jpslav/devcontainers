@@ -5,6 +5,9 @@
       "context": ".."
     },
     "workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind,consistency=default",
+    "mounts": [
+      "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+    ],
     "workspaceFolder": "/code",
     "extensions": [
     ],

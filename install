@@ -6,13 +6,15 @@ require 'json'
 require 'byebug'
 require 'erb'
 
-TYPES = %w(
-  typescript1
-)
-
 WORKING_DIR = Dir.pwd
 DEVCONTAINER_CONFIG_DIR = "#{__dir__}/config/devcontainer"
 DOCKER_CONFIG_DIR = "#{__dir__}/config/docker"
+
+TYPES = Dir["#{DEVCONTAINER_CONFIG_DIR}/*"].map do |config_file|
+  type = File.basename(config_file, ".json")
+  next if type == "base"
+  type
+end.compact
 
 OPTS = Optimist::options do 
   banner "Creates a VS Code devcontainer configuration in the current directory"
@@ -28,6 +30,7 @@ Optimist::die :color, "must be a hex color without the '#', e.g. 'fff' or 'fffff
 
 def update_gitignore
   gitignore_file = "#{WORKING_DIR}/.gitignore"
+  FileUtils.touch(gitignore_file)
   return if File.read(gitignore_file).match?(/\.devcontainer(\n|\z)/)
   File.open(gitignore_file, "a") { |f| f.write(".devcontainer") }
 end
