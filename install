@@ -7,7 +7,6 @@ require 'byebug'
 require 'erb'
 
 WORKING_DIR = Dir.pwd
-puts WORKING_DIR
 DEVCONTAINER_CONFIG_DIR = "#{__dir__}/config/devcontainer"
 DOCKER_CONFIG_DIR = "#{__dir__}/config/docker"
 
@@ -29,9 +28,12 @@ Optimist::die :type, "must be one of [#{TYPES.join(', ')}]" if !TYPES.include?(O
 Optimist::die :docker_base, "must be specified" if OPTS[:docker_base].nil?
 Optimist::die :color, "must be a hex color without the '#', e.g. 'fff' or 'ffffff'" unless (OPTS[:color].nil? || OPTS[:color].match?(/\A(\h{6}|\h{3})\z/))
 
-def update_gitignore
-  gitignore_file = "#{WORKING_DIR}/.gitignore"
-  FileUtils.touch(gitignore_file)
+def gitignore
+  # https://stackoverflow.com/questions/7335420/global-git-ignore#comment66973282_7335420
+  # https://git-scm.com/docs/gitignore
+  gitignore_file = "#{WORKING_DIR}/.git/info/exclude"
+  return unless File.exist?(gitignore_file)
+  
   return if File.read(gitignore_file).match?(/\.devcontainer(\n|\z)/)
   File.open(gitignore_file, "a") { |f| f.write(".devcontainer") }
 end
@@ -81,6 +83,6 @@ def make_dockerfile
   File.open("#{WORKING_DIR}/.devcontainer/Dockerfile", "w") { |f| f.write(dockerfile)}
 end
 
-update_gitignore
+gitignore
 make_devcontainer_json
 make_dockerfile
