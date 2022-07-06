@@ -1,14 +1,25 @@
 {
-    "extra_extensions": [
-      "dsznajder.es7-react-js-snippets",
-      "dbaeumer.vscode-eslint",
-      "formulahendry.auto-close-tag",
-      "formulahendry.auto-rename-tag",
-      "naumovs.color-highlight",
-      "vincaslt.highlight-matching-tag",
-      "OfHumanBondage.react-proptypes-intellisense",
-      "DSKWRK.vscode-generate-getter-setter",
-      "pmneo.tsimporter",
-      "stringham.move-ts"
+  "extra_extensions": [
+    "dsznajder.es7-react-js-snippets",
+    "dbaeumer.vscode-eslint",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "naumovs.color-highlight",
+    "vincaslt.highlight-matching-tag",
+    "OfHumanBondage.react-proptypes-intellisense",
+    "DSKWRK.vscode-generate-getter-setter",
+    "pmneo.tsimporter",
+    "stringham.move-ts"
+  ],
+  "settings": {
+    "auto-close-tag.activationOnLanguage": [
+      "xml",
+      "javascriptreact",
+      "typescriptreact",
+      "markdown",
+      "vue",
+      "erb",
+      "HTML (Eex)"
     ]
   }
+}

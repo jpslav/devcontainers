@@ -7,6 +7,7 @@ require 'byebug'
 require 'erb'
 
 WORKING_DIR = Dir.pwd
+puts WORKING_DIR
 DEVCONTAINER_CONFIG_DIR = "#{__dir__}/config/devcontainer"
 DOCKER_CONFIG_DIR = "#{__dir__}/config/docker"
 
@@ -62,6 +63,7 @@ def make_devcontainer_json
   type_specific_hash = read_devcontainer_config("#{OPTS[:type]}.json")
 
   hash["extensions"] = (hash["extensions"] + type_specific_hash["extra_extensions"]).uniq
+  hash["settings"].merge!(type_specific_hash["settings"])
 
   File.open("#{WORKING_DIR}/.devcontainer/devcontainer.json", "w") { |f| f.write(JSON.pretty_generate(hash))}
 end
