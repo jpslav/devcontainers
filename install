@@ -3,7 +3,6 @@
 require_relative 'lib/optimist'
 require 'fileutils'
 require 'json'
-require 'byebug'
 require 'erb'
 
 WORKING_DIR = Dir.pwd
