@@ -14,4 +14,4 @@
     "ruby.rubocop.configFilePath": "/code/.rubocop.yml",
     "terminal.integrated.scrollback": 100000
   }
-}+
+}
