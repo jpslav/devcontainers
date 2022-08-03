@@ -11,7 +11,6 @@ DOCKER_CONFIG_DIR = "#{__dir__}/config/docker"
 
 TYPES = Dir["#{DEVCONTAINER_CONFIG_DIR}/*"].map do |config_file|
   type = File.basename(config_file, ".json")
-  next if type == "base"
   type
 end.compact
 
