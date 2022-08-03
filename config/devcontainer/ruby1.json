@@ -5,10 +5,12 @@
   "settings": {
     "ruby.lint": {
       "rubocop": {
-        "useBundler": true // enable rubocop via bundler
+        // enable rubocop via bundler
+        "useBundler": true 
       },
     },
-    "ruby.format": "rubocop", // use rubocop for formatting
+    // use rubocop for formatting
+    "ruby.format": "rubocop", 
     "ruby.rubocop.executePath": "/usr/local/bundle/bin/",
     "ruby.rubocop.onSave": true,
     "ruby.rubocop.configFilePath": "/code/.rubocop.yml",
