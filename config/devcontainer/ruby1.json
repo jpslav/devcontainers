@@ -1,0 +1,17 @@
+{
+  "extra_extensions": [
+    "rebornix.Ruby"
+  ],
+  "settings": {
+    "ruby.lint": {
+      "rubocop": {
+        "useBundler": true // enable rubocop via bundler
+      },
+    },
+    "ruby.format": "rubocop", // use rubocop for formatting
+    "ruby.rubocop.executePath": "/usr/local/bundle/bin/",
+    "ruby.rubocop.onSave": true,
+    "ruby.rubocop.configFilePath": "/code/.rubocop.yml",
+    "terminal.integrated.scrollback": 100000
+  }
+}+
