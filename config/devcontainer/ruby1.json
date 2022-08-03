@@ -6,7 +6,7 @@
     "ruby.lint": {
       "rubocop": {
         "useBundler": true 
-      },
+      }
     },
     "ruby.format": "rubocop", 
     "ruby.rubocop.executePath": "/usr/local/bundle/bin/",
