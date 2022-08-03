@@ -1,0 +1,11 @@
+FROM <%= OPTS[:docker_base] %>
+
+<%= basic_apt_get %>
+
+<%= prompt1 %>
+
+<% if OPTS[:live_share] -%>
+<%= live_share %>
+<% end -%>
+
+WORKDIR /code
